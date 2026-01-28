@@ -9,12 +9,15 @@ import {
 import { getEvents } from '../api/apiEvents';
 import { Event } from '../types/events';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { TextInput } from 'react-native';
 
 export function EventListScreen() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState('');
+  const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
+
 
   async function loadEvents() {
     try {
@@ -22,6 +25,7 @@ export function EventListScreen() {
       setError(null);
       const data = await getEvents();
       setEvents(data);
+      setFilteredEvents(data);
     } catch {
       setError('Erro ao carregar eventos');
     } finally {
@@ -52,9 +56,16 @@ export function EventListScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <Text style={styles.header}>Eventos</Text>
+      <TextInput
+  placeholder="Buscar evento pelo título"
+  value={search}
+  onChangeText={handleSearch}
+  style={styles.input}
+/>
+
 
       <FlatList
-        data={events}
+        data={filteredEvents}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
@@ -68,7 +79,24 @@ export function EventListScreen() {
       />
     </SafeAreaView>
   );
+  
+
+
+  function handleSearch(text: string) {
+  setSearch(text);
+
+  const filtered = events.filter((event) =>
+    event.title.toLowerCase().includes(text.toLowerCase())
+  );
+
+  setFilteredEvents(filtered);
 }
+
+}
+
+
+
+
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -103,5 +131,14 @@ const styles = StyleSheet.create({
     marginTop: 4,
     opacity: 0.7,
   },
+  input: {
+  backgroundColor: '#fff',
+  padding: 12,
+  borderRadius: 8,
+  marginBottom: 16,
+  borderWidth: 1,
+  borderColor: '#ddd',
+},
+
 });
 
