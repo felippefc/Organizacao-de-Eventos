@@ -5,14 +5,18 @@ import {
   FlatList,
   ActivityIndicator,
   StyleSheet,
+  TextInput,
+  Button,
+  TouchableOpacity,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
+
 import { getEvents } from '../api/apiEvents';
 import { Event } from '../types/events';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { TextInput } from 'react-native';
-import { TouchableOpacity } from 'react-native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation';
 
 type NavigationProps = NativeStackNavigationProp<
@@ -20,15 +24,14 @@ type NavigationProps = NativeStackNavigationProp<
   'EventList'
 >;
 
-
 export function EventListScreen() {
   const [events, setEvents] = useState<Event[]>([]);
+  const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
-  const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
-  const navigation = useNavigation<NavigationProps>();
 
+  const navigation = useNavigation<NavigationProps>();
 
   async function loadEvents() {
     try {
@@ -44,9 +47,21 @@ export function EventListScreen() {
     }
   }
 
-  useEffect(() => {
-    loadEvents();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadEvents();
+    }, [])
+  );
+
+  function handleSearch(text: string) {
+    setSearch(text);
+
+    const filtered = events.filter((event) =>
+      event.title.toLowerCase().includes(text.toLowerCase())
+    );
+
+    setFilteredEvents(filtered);
+  }
 
   if (loading) {
     return (
@@ -66,13 +81,21 @@ export function EventListScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.createButton}
+          onPress={() => navigation.navigate('CreateEvent')}
+        >
+          <Text style={styles.createButtonText}>+ Novo Evento</Text>
+        </TouchableOpacity>
+      </View>
+
       <TextInput
         placeholder="Buscar evento pelo título"
         value={search}
         onChangeText={handleSearch}
         style={styles.input}
       />
-
 
       <FlatList
         data={filteredEvents}
@@ -82,7 +105,9 @@ export function EventListScreen() {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.card}
-            onPress={() => navigation.navigate('EventDetail', { event: item })}
+            onPress={() =>
+              navigation.navigate('EventDetail', { event: item })
+            }
           >
             <Text style={styles.title}>{item.title}</Text>
             <Text>{item.location}</Text>
@@ -92,23 +117,7 @@ export function EventListScreen() {
       />
     </SafeAreaView>
   );
-
-
-
-  function handleSearch(text: string) {
-    setSearch(text);
-
-    const filtered = events.filter((event) =>
-      event.title.toLowerCase().includes(text.toLowerCase())
-    );
-
-    setFilteredEvents(filtered);
-  }
-
 }
-
-
-
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -152,6 +161,24 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
   },
+  buttonContainer: {
+    alignItems: 'flex-end',
+    marginBottom: 16,
+  },
+
+  createButton: {
+    backgroundColor: '#2563eb',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+  },
+
+  createButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+
 
 });
 
