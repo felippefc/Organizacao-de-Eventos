@@ -10,6 +10,16 @@ import { getEvents } from '../api/apiEvents';
 import { Event } from '../types/events';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput } from 'react-native';
+import { TouchableOpacity } from 'react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../navigation';
+
+type NavigationProps = NativeStackNavigationProp<
+  RootStackParamList,
+  'EventList'
+>;
+
 
 export function EventListScreen() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -17,6 +27,7 @@ export function EventListScreen() {
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
+  const navigation = useNavigation<NavigationProps>();
 
 
   async function loadEvents() {
@@ -55,13 +66,12 @@ export function EventListScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Text style={styles.header}>Eventos</Text>
       <TextInput
-  placeholder="Buscar evento pelo título"
-  value={search}
-  onChangeText={handleSearch}
-  style={styles.input}
-/>
+        placeholder="Buscar evento pelo título"
+        value={search}
+        onChangeText={handleSearch}
+        style={styles.input}
+      />
 
 
       <FlatList
@@ -70,27 +80,30 @@ export function EventListScreen() {
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
-          <View style={styles.card}>
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => navigation.navigate('EventDetail', { event: item })}
+          >
             <Text style={styles.title}>{item.title}</Text>
             <Text>{item.location}</Text>
             <Text style={styles.status}>Status: {item.status}</Text>
-          </View>
+          </TouchableOpacity>
         )}
       />
     </SafeAreaView>
   );
-  
+
 
 
   function handleSearch(text: string) {
-  setSearch(text);
+    setSearch(text);
 
-  const filtered = events.filter((event) =>
-    event.title.toLowerCase().includes(text.toLowerCase())
-  );
+    const filtered = events.filter((event) =>
+      event.title.toLowerCase().includes(text.toLowerCase())
+    );
 
-  setFilteredEvents(filtered);
-}
+    setFilteredEvents(filtered);
+  }
 
 }
 
@@ -119,7 +132,7 @@ const styles = StyleSheet.create({
   card: {
     padding: 16,
     borderRadius: 12,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: '#f2f2f242',
     marginBottom: 16,
   },
   title: {
@@ -132,13 +145,13 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   input: {
-  backgroundColor: '#fff',
-  padding: 12,
-  borderRadius: 8,
-  marginBottom: 16,
-  borderWidth: 1,
-  borderColor: '#ddd',
-},
+    backgroundColor: '#fff',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
 
 });
 
