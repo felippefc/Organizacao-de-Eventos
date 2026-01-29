@@ -8,19 +8,56 @@ import {
   Alert,
 } from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
-
 import { RootStackParamList } from '../navigation';
 import { updateEventStatus } from '../api/apiEvents';
 import { Event, EventStatus } from '../types/events';
+import { deleteEvent } from '../api/apiEvents';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
 
 type RouteProps = RouteProp<RootStackParamList, 'EventDetail'>;
+type NavigationProps = NativeStackNavigationProp<
+  RootStackParamList,
+  'EventDetail'
+>;
+
 
 export function EventDetailScreen() {
   const { params } = useRoute<RouteProps>();
   const { event } = params;
+  const navigation = useNavigation<NavigationProps>();
+
 
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<EventStatus>(event.status);
+
+  function handleDeleteEvent() {
+    Alert.alert(
+      'Remover evento',
+      'Tem certeza que deseja remover este evento?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Remover',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              setLoading(true);
+              await deleteEvent(event.id);
+              Alert.alert('Sucesso', 'Evento removido');
+              navigation.goBack();
+            } catch {
+              Alert.alert('Erro', 'Não foi possível remover o evento');
+            } finally {
+              setLoading(false);
+            }
+          },
+        },
+      ]
+    );
+  }
+
 
   async function handleUpdateStatus(newStatus: EventStatus) {
     try {
@@ -70,6 +107,14 @@ export function EventDetailScreen() {
               title="Cancelado"
               onPress={() => handleUpdateStatus('CANCELLED')}
             />
+            <View style={styles.deleteContainer}>
+              <Button
+                title="Remover evento"
+                color="red"
+                onPress={handleDeleteEvent}
+                disabled={loading}
+              />
+            </View>
           </>
         )}
       </View>
@@ -94,5 +139,9 @@ const styles = StyleSheet.create({
     marginTop: 24,
     gap: 12,
   },
+  deleteContainer: {
+  marginTop: 32,
+},
+
 });
 
