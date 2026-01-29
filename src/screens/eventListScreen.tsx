@@ -18,6 +18,7 @@ import { useCallback } from 'react';
 import { getEvents } from '../api/apiEvents';
 import { Event } from '../types/events';
 import { RootStackParamList } from '../navigation';
+import { saveEvents, loadEvents as loadEventsFromStorage } from '../utils/starage';
 
 type NavigationProps = NativeStackNavigationProp<
   RootStackParamList,
@@ -37,15 +38,27 @@ export function EventListScreen() {
     try {
       setLoading(true);
       setError(null);
+
       const data = await getEvents();
+
       setEvents(data);
       setFilteredEvents(data);
+
+      await saveEvents(data);
     } catch {
-      setError('Erro ao carregar eventos');
+      const localEvents = await loadEventsFromStorage();
+
+      if (localEvents.length > 0) {
+        setEvents(localEvents);
+        setFilteredEvents(localEvents);
+      } else {
+        setError('Erro ao carregar eventos');
+      }
     } finally {
       setLoading(false);
     }
   }
+
 
   useFocusEffect(
     useCallback(() => {
