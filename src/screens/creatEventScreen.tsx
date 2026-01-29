@@ -22,11 +22,37 @@ export function CreateEventScreen() {
 
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit() {
-    if (!title || !date || !location) {
-      Alert.alert('Erro', 'Preencha todos os campos');
-      return;
+  function validateForm() {
+    if (!title.trim()) {
+      Alert.alert('Erro', 'Título é obrigatório');
+      return false;
     }
+
+    if (title.length < 3) {
+      Alert.alert('Erro', 'Título deve ter ao menos 3 caracteres');
+      return false;
+    }
+
+    if (!date.trim()) {
+      Alert.alert('Erro', 'Data é obrigatória');
+      return false;
+    }
+
+    if (isNaN(Date.parse(date))) {
+      Alert.alert('Erro', 'Data inválida');
+      return false;
+    }
+
+    if (!location.trim()) {
+      Alert.alert('Erro', 'Local é obrigatório');
+      return false;
+    }
+
+    return true;
+  }
+
+  async function handleSubmit() {
+    if (!validateForm()) return;
 
     try {
       setLoading(true);
@@ -46,6 +72,7 @@ export function CreateEventScreen() {
       setLoading(false);
     }
   }
+
 
   return (
     <View style={styles.container}>
@@ -80,7 +107,7 @@ export function CreateEventScreen() {
       {loading ? (
         <ActivityIndicator />
       ) : (
-        <Button title="Salvar evento" onPress={handleSubmit} />
+        <Button title="Salvar evento" onPress={handleSubmit} disabled={loading}/>
       )}
     </View>
   );
