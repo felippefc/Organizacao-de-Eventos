@@ -1,119 +1,118 @@
-📱 Aplicativo de Organização de Eventos
+# 📱 Aplicativo de Organização de Eventos
 
 Aplicação mobile desenvolvida em React Native com Expo e TypeScript para organização de eventos internos de uma empresa.
 
 O app permite cadastrar, visualizar, filtrar, atualizar e remover eventos, consumindo uma API REST previamente disponibilizada.
 
-🚀 Tecnologias utilizadas
+## 🚀 Tecnologias utilizadas
 
-React Native
+-React Native
 
-Expo
+-Expo
 
-TypeScript
+-TypeScript
 
-Axios
+-Axios
 
-React Navigation
+-React Navigation
 
-AsyncStorage
+-AsyncStorage
 
-Jest (testes unitários básicos)
+-Jest (testes unitários básicos)
 
-📋 Funcionalidades
-✅ Funcionalidades obrigatórias
+## 📋 Funcionalidades
 
-Listagem de eventos
+-Listagem de eventos
 
-Filtro de eventos por título
+-Filtro de eventos por título
 
-Visualização de detalhes do evento
+-Visualização de detalhes do evento
 
-Cadastro de novo evento
+-Cadastro de novo evento
 
-Atualização do status do evento
+-Atualização do status do evento
 
-Remoção de evento
+-Remoção de evento
 
-Integração com API REST
+-Integração com API REST
 
-Tratamento de estados de loading e erro
+-Tratamento de estados de loading e erro
 
-⭐ Funcionalidades bônus
+-Persistência local com AsyncStorage
 
-Persistência local com AsyncStorage
+-Validação de formulário
 
-Validação de formulário
+-Testes unitários básicos
 
-Testes unitários básicos
-
-🧱 Estrutura do projeto
+## 🗂️ Estrutura do Projeto
+```
 src/
  ├── api/            # Integração com API (axios)
  ├── navigation/     # Rotas e navegação
  ├── screens/        # Telas da aplicação
- ├── storage/        # Persistência local (AsyncStorage)
  ├── types/          # Tipagens TypeScript
- ├── utils/          # Funções utilitárias (validação)
+ ├── utils/          # Funções utilitárias  Persistência local (AsyncStorage)
  └── tests/          # Testes unitários
+ ````
 
-⚙️ Pré-requisitos
+## ⚙️ Pré-requisitos
 
-Node.js (versão 16 ou superior)
+-Node.js (versão 16 ou superior) <br/>
+-npm ou yarn <br/>
+-Expo CLI <br/>
 
-npm ou yarn
+## ▶️ Como executar o projeto
+1️⃣ Clone o repositório e navegue até a pasta do projeto
 
-Expo CLI
 
-▶️ Como executar o projeto
-1️⃣ Clone o repositório
-git clone <https://github.com/felippefc/Organizacao-de-Eventos.git>
-cd <Organizacao-de-Eventos>
-
-2️⃣ Instale as dependências
+2️⃣ Instale as dependências <br/>
+```
 npm install
+```
 
 
 ou
-
+```
 yarn install
-
-3️⃣ Execute o projeto
+```
+3️⃣ Execute o projeto <br/>
+```
 npm start
-
+```
 
 ou
-
+```
 yarn start
-
+```
 
 Abra o app no Expo Go ou emulador Android/iOS.
 
-🌐 API utilizada
+## 🌐 API utilizada
 
-A aplicação consome uma[API REST local.](https://github.com/MatheusAndrade23/internal-events-api)
+A aplicação consome uma [API REST local.](https://github.com/MatheusAndrade23/internal-events-api)
 
-Base URL: http://localhost:3000
+-Base URL: http://localhost:3000
 
-Documentação Swagger disponível em /docs
+-Documentação Swagger disponível em /docs
 
-A API não possui autenticação
+-A API não possui autenticação
 
-Os dados não persistem após reinicialização do servidor
+-Os dados não persistem após reinicialização do servidor
 
-🧪 Testes unitários
+## 🧪 Testes unitários
 
 Testes unitários básicos foram implementados para validar regras de negócio, como validação de formulário.
 
-Executar testes:
+Executar testes: <br/>
+```
 npm test
-
+```
 
 ou
-
+```
 yarn test
-
-🧠 Decisões técnicas
+```
+## 🧠 Decisões técnicas
 
 Componentes funcionais e hooks foram utilizados seguindo boas práticas do React.
 
@@ -123,7 +122,7 @@ A validação de dados é feita no frontend para melhorar a experiência do usu�
 
 O código foi organizado visando legibilidade e facilidade de manutenção.
 
-👨‍💻 Autor
+## 👨‍💻 Autor
 
-Desenvolvido por Felippe Feliciano
+Desenvolvido por Felippe Feliciano <br/>
 Desafio técnico – Aplicação Mobile
