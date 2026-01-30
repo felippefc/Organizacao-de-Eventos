@@ -52,7 +52,7 @@ src/
  ├── screens/        # Telas da aplicação
  ├── types/          # Tipagens TypeScript
  ├── utils/          # Funções utilitárias  Persistência local (AsyncStorage)
- └── tests/          # Testes unitários
+      └── tests/          # Testes unitários
  ````
 
 ## ⚙️ Pré-requisitos
@@ -105,13 +105,10 @@ Testes unitários básicos foram implementados para validar regras de negócio, 
 
 Executar testes: <br/>
 ```
-npm test
+npx jest
+
 ```
 
-ou
-```
-yarn test
-```
 ## 🧠 Decisões técnicas
 
 Componentes funcionais e hooks foram utilizados seguindo boas práticas do React.
